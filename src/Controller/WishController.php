@@ -21,7 +21,7 @@ class WishController extends Controller
     }
 
     /**
-     * @Route("/remove/{id}", name="wish_remove"))
+     * @Route("/remove/{id}", name="wish_remove")
      * @param $wish
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -55,5 +55,15 @@ class WishController extends Controller
         return $this->render("wish/create.html.twig", [
             "form" => $form->createView()
         ]);
+    }
+    /**
+     * @Route("/update/{id}", name="wish_update")
+     */
+    public function update(Wish $wish, Request $request){
+        $form = $this->createForm(WishType::class, $wish);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()){
+            $em=$this
+        }
     }
 }
