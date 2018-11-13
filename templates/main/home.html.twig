@@ -9,7 +9,7 @@
         <article>
             <h4><a href="{{ path('wish_detail', {'id':wish.id}) }}">{{ wish.label }}</a></h4>
             <p>{{ wish.dateCreated|date("d/m/Y à H:i") }}</p>
-            <p>{{ wish.dateUpdate|date("d/m/Y") }}</p>
+            <p>{{ wish.dateUpdate|date("d/m/Y à H:i") }}</p>
         </article>
     {% endfor %}
 {% endblock %}

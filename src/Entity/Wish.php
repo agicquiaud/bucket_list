@@ -100,7 +100,7 @@ class Wish
 
     public function setDateUpdate(\DateTimeInterface $dateUpdate): self
     {
-        $this->dateCreated = $dateUpdate;
+        $this->dateUpdate = $dateUpdate;
 
         return $this;
     }
