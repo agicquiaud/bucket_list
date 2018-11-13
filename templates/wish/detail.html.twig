@@ -1,0 +1,8 @@
+{% extends 'layout.html.twig' %}
+{% block title %}Detail{% endblock %}
+{% block main %}
+    <h4>{{ wish.label }}</h4>
+    <p>{{ wish.description }}</p>
+    <p>{{ wish.dateCreated|date("d/m/Y") }}</p>
+    <a href="{{ path('wish_remove', {'id': wish.id}) }}" class="btn btn-danger">Supprimer</a>
+{% endblock %}

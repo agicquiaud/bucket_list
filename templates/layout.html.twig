@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible">
+    <title>{% block title %}Bucket-List{% endblock %}</title>
+    {#On utilise asset() pour générer le bon chemin vers les fichers .css, .js, ... etc#}
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset("css/app.css") }}">
+    <link rel="stylesheet" href="{{ asset("css/bootstrap.css") }}">
+    <link rel="stylesheet" href="{{ asset("css/bootstrap-grid.css") }}">
+    <link rel="stylesheet" href="{{ asset("css/bootstrap-reboot.css") }}">
+    <script src="{{ asset("js/jquery.min.js") }}"></script>
+    <script src="{{ asset("js/bootstrap.js") }}"></script>
+    <script src="{{ asset("js/bootstrap.bundle.js") }}"></script>
+    {% block css %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Bucket-list</h1>
+        </header>
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <main>
+            {% block main %}{% endblock %}
+        </main>
+    </div>
+    {% block js %}{% endblock %}
+</body>
+<footer>© {{ "now"|date("Y") }}</footer>
+<nav>
+    <a href="{{ path("home") }}">Accueil</a>|
+    <a href="{{ path("faq") }}">FAQ</a>|
+    <a href="{{ path("contact") }}">contact</a>|
+    <a href="{{ path("cgu") }}">CGU</a>
+</nav>
+</html>
