@@ -63,7 +63,14 @@ class WishController extends Controller
         $form = $this->createForm(WishType::class, $wish);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()){
-            $em=$this
+            $wish->setDateUpdate(new \DateTime());
+            $em=$this->getDoctrine()->getManager();
+            $em->persist($wish);
+            $em->flush();
+            return $this->redirectToRoute("home");
         }
+        return $this->render("wish/update.html.twig", [
+            "form"=>$form->createView()
+        ]);
     }
 }

@@ -4,5 +4,6 @@
     <h4>{{ wish.label }}</h4>
     <p>{{ wish.description }}</p>
     <p>{{ wish.dateCreated|date("d/m/Y") }}</p>
+    <a href="{{ path('wish_update', {'id':wish.id}) }}" class="btn btn-warning">Modifier</a>
     <a href="{{ path('wish_remove', {'id': wish.id}) }}" class="btn btn-danger">Supprimer</a>
 {% endblock %}

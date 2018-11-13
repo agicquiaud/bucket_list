@@ -36,6 +36,11 @@ class Wish
      */
     private $dateCreated;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateUpdate;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -85,6 +90,17 @@ class Wish
     public function setDateCreated(\DateTimeInterface $dateCreated): self
     {
         $this->dateCreated = $dateCreated;
+
+        return $this;
+    }
+    public function getDateUpdate(): ?\DateTimeInterface
+    {
+        return $this->dateUpdate;
+    }
+
+    public function setDateUpdate(\DateTimeInterface $dateUpdate): self
+    {
+        $this->dateCreated = $dateUpdate;
 
         return $this;
     }
