@@ -27,18 +27,24 @@ class DummyDataCommand extends ContainerAwareCommand
         $connection = $doctrine->getConnection();
         $connection->query("TRUNCATE TABLE wish");
         $io = new SymfonyStyle($input, $output);
+        $io->text("Table wish truncated !");
         $em = $this->getContainer()->get("doctrine")->getManager();
         $faker = \Faker\Factory::create();
-        $wish = new Wish();
-        $date = new \DateTime();
-        $wish->setLabel($faker->sentence);
-        $wish->setDescription($faker->text);
-        while ($faker->dateTime > $date){
-
+        $io->progressStart(1000);
+        for($i = 0; $i<1000; $i++) {
+            $wish = new Wish();
+            $wish->setLabel($faker->sentence);
+            $wish->setDescription($faker->optional(0.5)->text(1000));
+            $dateCreated = $faker->dateTimeBetween("- 2 years");
+            $wish->setDateCreated($dateCreated);
+            $dateUpdate = $faker->optional(0.3)->dateTimeBetween($dateCreated);
+            $wish->setDateUpdate($dateUpdate);
+            $em->persist($wish);
+            $io->progressAdvance(1);
         }
-        $wish->setDateCreated($faker->dateTime);
-        $em->persist($wish);
+        $io->progressFinish();
         $em->flush();
         $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+
     }
 }
