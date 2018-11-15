@@ -1,27 +1,42 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible">
     <title>{% block title %}Bucket-List{% endblock %}</title>
-    {#On utilise asset() pour générer le bon chemin vers les fichers .css, .js, ... etc#}
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset("css/app.css") }}">
-    <link rel="stylesheet" href="{{ asset("css/bootstrap.css") }}">
-    <link rel="stylesheet" href="{{ asset("css/bootstrap-grid.css") }}">
-    <link rel="stylesheet" href="{{ asset("css/bootstrap-reboot.css") }}">
-    <script src="{{ asset("js/jquery.min.js") }}"></script>
-    <script src="{{ asset("js/bootstrap.js") }}"></script>
-    <script src="{{ asset("js/bootstrap.bundle.js") }}"></script>
+
+    {# on utilise asset() pour générer le bon chemin
+     vers les fichiers .css, .js ou img... #}
+    <link href="https://fonts.googleapis.com/css?family=Alfa+Slab+One" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
     {% block css %}{% endblock %}
+
+    <link rel="icon" href="{{ asset('img/favicon.png') }}">
 </head>
 <body>
+
     <div class="container">
         <header>
-            <h1>Bucket-list</h1>
+            <div class="row">
+                <h1 class="col col-md-5">
+                    <a href="{{ path('home') }}" title="Bucket-List">
+                        <img alt="Bucket-List" src="{{ asset('img/bucket.svg') }}">Bucket-List
+                    </a>
+                </h1>
+                <nav class="col col-md-7">
+                    <ul class="nav nav-pills">
+                        <li><a href="{{ path('home') }}" title="Retour à l'accueil">Accueil</a></li>
+                        <li><a href="{{ path('wish_create') }}" title="Ajouter une idée">Ajouter une idée</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <hr>
         </header>
+
+
         {% for label, messages in app.flashes %}
             {% for message in messages %}
                 <div class="alert alert-{{ label }}">
@@ -29,17 +44,29 @@
                 </div>
             {% endfor %}
         {% endfor %}
+
         <main>
             {% block main %}{% endblock %}
         </main>
+        <footer>
+            <hr>
+            <p class="text-center">{{ "now"|date("Y") }} bucket-list</p>
+
+            <nav>
+                <ul class="nav nav-pills">
+                    {# path() prend le 'name' des routes en argument #}
+                    <li><a href="{{ path('home') }}">Accueil</a></li>
+                    <li><a href="{{ path('faq') }}">FAQ</a></li>
+                    <li><a href="{{ path('cgu') }}">CGU</a></li>
+                    <li><a href="{{ path('contact') }}">Contact</a></li>
+                    <li><a href="{{ path('test', {'id': 123}) }}">test</a></li>
+                </ul>
+            </nav>
+
+        </footer>
     </div>
+
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
     {% block js %}{% endblock %}
 </body>
-<footer>© {{ "now"|date("Y") }}</footer>
-<nav>
-    <a href="{{ path("home") }}">Accueil</a>|
-    <a href="{{ path("faq") }}">FAQ</a>|
-    <a href="{{ path("contact") }}">contact</a>|
-    <a href="{{ path("cgu") }}">CGU</a>
-</nav>
 </html>

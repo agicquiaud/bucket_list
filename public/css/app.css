@@ -1,4 +1,57 @@
-body{
-    background-color: #818182;
-    font-family: 'Montserrat', sans-serif;
+header {
+    padding-top: 10px;
+}
+
+header hr {
+    margin-top: 10px;
+}
+
+.nav>li>a {
+    padding: 2px 7px;
+}
+
+header img {
+    height: 50px;
+}
+
+h1 {
+    font-family: 'Alfa Slab One', cursive;
+    font-size: 50px;
+    margin: 0;
+}
+
+h1 img {
+    position: relative;
+    top: -10px;
+    margin-right: 5px;
+}
+
+article {
+    padding: 15px 20px;
+    background-color: #f9f9f9;
+    border-radius: 2px;
+    margin: 9px 0;
+}
+
+footer {
+    margin-top: 60px;
+}
+
+footer nav {
+    text-align: center;
+}
+
+footer nav ul {
+    display: inline-block;
+}
+
+@media screen and (min-width: 992px){
+
+    header hr {
+        margin-top: 0;
+    }
+
+    header nav {
+        top: 25px;
+    }
 }

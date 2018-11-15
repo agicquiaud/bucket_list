@@ -1,15 +1,23 @@
 {% extends 'layout.html.twig' %}
-{% block title %}Accueil{% endblock %}
+
 {% block main %}
-    <h1 class="h1">Accueil</h1>
-    <h2 class="text-danger">What to do before dying ?</h2>
-    <p>{{ wishesCount }} total ideas</p>
-    <h3>The last 5 ideas</h3>
+    <h2>Que devez-vous faire avant de mourir ?</h2>
+
+    <p>{{ wishesCount }} idées au total !</p>
+
+    <h3>Les 5 dernières idées</h3>
     {% for wish in wishes %}
         <article>
-            <h4><a href="{{ path('wish_detail', {'id':wish.id}) }}">{{ wish.label }}</a></h4>
+            <h4>
+                <a href="{{ path('wish_detail', {'id': wish.id}) }}"
+                   title="Tous les détails de cette idée">
+                {{ wish.label }}
+                </a>
+            </h4>
             <p>{{ wish.dateCreated|date("d/m/Y à H:i") }}</p>
-            <p>{{ wish.dateUpdate|date("d/m/Y à H:i") }}</p>
         </article>
     {% endfor %}
+
 {% endblock %}
+
+{% block title %}{{ parent() }} | Accueil{% endblock %}

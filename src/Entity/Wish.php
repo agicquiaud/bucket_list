@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\WishRepository")
@@ -17,11 +20,25 @@ class Wish
     private $id;
 
     /**
+     *
+     * @Assert\NotBlank(message="Veuillez renseigner votre idée !")
+     * @Assert\Length(
+     *     min="5",
+     *     minMessage="5 caractères minimum svp !",
+     *     max="100",
+     *     maxMessage="100 caractères max svp !"
+     * )
      * @ORM\Column(type="string", length=100)
      */
     private $label;
 
     /**
+     * @Assert\Length(
+     *     min="5",
+     *     minMessage="5 caractères minimum svp !",
+     *     max="10000",
+     *     maxMessage="10 000 caractères max svp !"
+     * )
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
@@ -39,7 +56,33 @@ class Wish
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $dateUpdate;
+    private $dateUpdated;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="wishes")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
+
+    /**
+     * @ORM\OrderBy({"dateCreated" = "DESC"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="wish", orphanRemoval=true)
+     */
+    private $comments;
+
+    public function getRatingAverage()
+    {
+        $total = 0;
+        foreach($this->comments as $comment){
+            $total += $comment->getRating();
+        }
+        return $total / count($this->comments);
+    }
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -93,14 +136,58 @@ class Wish
 
         return $this;
     }
-    public function getDateUpdate(): ?\DateTimeInterface
+
+    public function getDateUpdated(): ?\DateTimeInterface
     {
-        return $this->dateUpdate;
+        return $this->dateUpdated;
     }
 
-    public function setDateUpdate(\DateTimeInterface $dateUpdate): self
+    public function setDateUpdated(?\DateTimeInterface $dateUpdated): self
     {
-        $this->dateUpdate = $dateUpdate;
+        $this->dateUpdated = $dateUpdated;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setWish($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getWish() === $this) {
+                $comment->setWish(null);
+            }
+        }
 
         return $this;
     }

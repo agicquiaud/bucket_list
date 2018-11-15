@@ -1,5 +1,7 @@
 {% extends 'layout.html.twig' %}
-{% block title %}CGU{% endblock %}
+
 {% block main %}
-    <h3>CGU</h3>
+    <h2>CGU</h2>
 {% endblock %}
+
+{% block title %}{{ parent() }} | CGU{% endblock %}

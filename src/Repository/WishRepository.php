@@ -19,6 +19,36 @@ class WishRepository extends ServiceEntityRepository
         parent::__construct($registry, Wish::class);
     }
 
+    public function findListWishes($keyword)
+    {
+        //version en DQL
+
+        /*$dql = "SELECT w
+                FROM App\Entity\Wish w 
+                WHERE w.dateCreated >= 2018
+                AND w.dateCreated < 2020
+                ORDER BY w.label DESC";
+        $query = $this->getEntityManager()->createQuery($dql);*/
+
+
+        //version en QueryBuilder
+        $qb = $this->createQueryBuilder('w');
+        $qb->select('w')
+            ->andWhere('w.dateCreated >= 2018')
+            ->addOrderBy('w.label', 'DESC');
+
+
+        if ($keyword){
+            $qb->andWhere("w.label LIKE :kw");
+            $qb->setParameter('kw', '%' . $keyword . '%');
+        }
+
+        $query = $qb->getQuery();
+
+        $wishes = $query->getResult();
+        return $wishes;
+    }
+
     // /**
     //  * @return Wish[] Returns an array of Wish objects
     //  */
