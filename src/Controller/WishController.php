@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Comment;
 use App\Entity\Wish;
 use App\Form\CommentType;
@@ -10,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 class WishController extends Controller
 {
     /**
@@ -17,13 +20,29 @@ class WishController extends Controller
      */
     public function list(Request $request)
     {
-        $keyword = $request->get("kw");
+        //récupère les données du formulaire depuis l'URL
+        $page = $request->get('page') ? (int) $request->get('page') : 1;
+        $keyword = $request->get('kw');
+        $categoryId = (int) $request->get('cat');
+        $sort = $request->get('sort');
+
         $repo = $this->getDoctrine()->getRepository(Wish::class);
         //voir dans WishRepository pour cette méthode perso
-        $wishes = $repo->findListWishes($keyword);
+        $result = $repo->findListWishes($page, $keyword, $categoryId, $sort);
+
+        //pour le select dans le formulaire
+        $categoryRepo = $this->getDoctrine()->getRepository(Category::class);
+        $categories = $categoryRepo->findBy([], ['name' => 'ASC']);
 
         return $this->render("wish/list.html.twig", [
-            "wishes" => $wishes,
+            "wishes" => $result['wishes'],
+            "totalWishes" => $result['total'],
+            "lastPage" => $result['lastPage'],
+            "categories" => $categories,
+            "page" => $page,
+            "keyword" => $keyword,
+            "categoryId" => $categoryId,
+            "sort" => $sort,
         ]);
     }
 
@@ -46,6 +65,9 @@ class WishController extends Controller
            $entityManager->persist($comment);
            $entityManager->flush();
 
+           $wish->updateAverageRating();
+           $entityManager->flush();
+
            $this->addFlash("success", "Votre commentaire a été publié !");
            //on redirige ici-même pour vider le formulaire et éviter la resoumission des données
            return $this->redirectToRoute("wish_detail", [
@@ -60,6 +82,8 @@ class WishController extends Controller
    }
 
    /**
+    * empêche l'accès à cette page aux utilisateurs n'ayant pas de rôle
+    * @IsGranted("ROLE_USER")
     * @Route("/idee/supprimer/{id}", name="wish_remove")
     */
    public function remove(Wish $wish)
@@ -79,6 +103,13 @@ class WishController extends Controller
      */
     public function edit($id, Request $request)
     {
+        //empêche l'accès aux utilisateurs non connectés :
+        $this->denyAccessUnlessGranted("ROLE_USER");
+        //ou comme ça :
+        if (!$this->isGranted("ROLE_USER")){
+            throw $this->createAccessDeniedException("non !");
+        }
+
         //récupère le wish à modifier depuis la bdd
         $wishRepository = $this->getDoctrine()->getRepository(Wish::class);
         $wish = $wishRepository->find($id);

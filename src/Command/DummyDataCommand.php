@@ -3,7 +3,10 @@
 namespace App\Command;
 
 use App\Entity\Category;
+use App\Entity\Comment;
+use App\Entity\User;
 use App\Entity\Wish;
+use App\Form\CommentType;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -11,10 +14,18 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class DummyDataCommand extends ContainerAwareCommand
 {
     protected static $defaultName = 'app:dummy-data';
+    protected $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        parent::__construct();
+        $this->passwordEncoder = $passwordEncoder;
+    }
 
     protected function configure()
     {
@@ -52,7 +63,27 @@ class DummyDataCommand extends ContainerAwareCommand
         $categoryRepository = $doctrine->getRepository(Category::class);
         $allCategories = $categoryRepository->findAll();
 
-        $wishNum = 1000;
+        /*
+         * les users
+         */
+        $user = new User();
+        $user->setUsername("yo");
+        $user->setEmail("yo@gmail.com");
+        //php bin/console app:dummy-data
+
+        //hash le mdp
+        $hash = $this->passwordEncoder->encodePassword($user, "yo");
+        $user->setPassword($hash);
+
+        $user->setDateRegistered(new \DateTime("- 3 years"));
+        $user->setRoles(["ROLE_USER"]);
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        //ici, créer plusieurs users bidons...
+
+        $wishNum = 400;
         $io->text("Adding $wishNum wishes...");
         $io->progressStart($wishNum);
         for($i=0; $i<$wishNum; $i++) {
@@ -68,10 +99,28 @@ class DummyDataCommand extends ContainerAwareCommand
             $wish->setDateCreated($dateCreated);
             $dateUpdated = $faker->optional(0.3)->dateTimeBetween($dateCreated);
             $wish->setDateUpdated($dateUpdated);
-
+            //affecte un auteur à l'idée
+            $wish->setAuthor($user);
             $entityManager->persist($wish);
             $io->progressAdvance();
+
+            //commentaires
+            $commentsNum = mt_rand(0,12);
+            for($c=0; $c<$commentsNum; $c++){
+                $comment = new Comment();
+                $comment->setWish($wish);
+                $comment->setContent($faker->realText(300));
+                $comment->setEmail($faker->email);
+                $comment->setRating(mt_rand(0,5));
+                $comment->setDateCreated($faker->dateTimeBetween($dateCreated));
+                $wish->addComment($comment);
+                $entityManager->persist($comment);
+            }
+
+            $wish->updateAverageRating();
+            $entityManager->flush();
         }
+
         $io->progressFinish();
         $entityManager->flush();
         $io->text("$wishNum wishes added!");
