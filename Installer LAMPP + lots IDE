@@ -9,9 +9,9 @@ sudo a2ensite nom-du-fichier.conf
 sudo systemctl reload apache2
 sudo apt install libapache2-mod-php php
 nano ~/phpinfo.php
-mettre dans le phpinfo.php
-"<?php
-  "
+<?php
+  phpinfo();
+?>
 sudo mv ~/phpinfo.php /var/www/html
 sudo apt install mariadb-server
 sudo mariadb -u root
