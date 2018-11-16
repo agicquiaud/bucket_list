@@ -1,0 +1,27 @@
+sudo apt-get update
+sudo apt install apache2
+sudo apt install vim
+cd /etc/apache2/site-available
+sudo touch nom-du-fichier.conf
+sudo vim nom-du-fichier.conf
+"insérer une virtualhost"
+sudo a2ensite nom-du-fichier.conf
+sudo systemctl reload apache2
+sudo apt install libapache2-mod-php php
+nano ~/phpinfo.php
+mettre dans le phpinfo.php
+"<?php
+  "
+sudo mv ~/phpinfo.php /var/www/html
+sudo apt install mariadb-server
+sudo mariadb -u root
+sudo systemctl stop mariadb
+sudo mysqld_safe
+sudo apt install phpmyadmin
+sudo add-apt-repository ppa:ubuntu-desktop/ubuntu-make
+sudo apt-get update
+sudo apt-get install ubuntu-make
+umake ide phpstorm
+
+to launch phpstorm:
+sudo ~/.local/share/umake/ide/phpstorm/bin/phpstorm.sh
