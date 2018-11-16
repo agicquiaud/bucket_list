@@ -1,0 +1,10 @@
+install lamp :https://doc.ubuntu-fr.org/lamp\
+config apache2: https://doc.ubuntu-fr.org/apache2\
+config MariaDB: https://doc.ubuntu-fr.org/mariadb\
+install phpmyadmin: https://doc.ubuntu-fr.org/phpmyadmin\
+install composer: https://doc.ubuntu-fr.org/composer\
+utilisateur et privil\'e8ges MariaDB: https://blog.emmanuelgautier.fr/utilisateurs-et-privileges-sous-mysql/\
+2\'e8me lien: https://www.digitalocean.com/community/tutorials/how-to-reset-your-mysql-or-mariadb-root-password\
+memo commande pour symfony: https://github.com/machinchoseformation/bucket-list/blob/master/memo-commandes.txt\
+gestion des virtual host: https://httpd.apache.org/docs/2.4/fr/vhosts/examples.html\
+tuto lampp: https://forum.ubuntu-fr.org/viewtopic.php?id=1990066\
